@@ -1,0 +1,85 @@
+CryWrap Installation notes
+==========================
+
+Build requirements
+------------------
+
+In order to compile CryWrap from sources certain additional software
+must be present on the build system, including a POSIX-compatible
+shell (usually /bin/sh), a POSIX compliant C library, a compiler that
+supports C99 (GCC is such a compiler), GNU make, GnuTLS (version 1.0.0
+or later), and Libidn.
+
+How to compile CryWrap
+----------------------
+
+Its really quite simple - its about the same difficulty as compiling
+any GNU software.
+
+Just `cd' to the directory containing the sources, and type
+`./configure'.  This will try to collect as much information about the
+build environment as is needed to successfully compile the package.
+This step usually takes a while, so feel free to sit back and drink a
+cup of tea.
+
+When `configure' finished successfully, the package can be compiled by
+issuing the `make' (or `gmake' on certain non-GNU systems) command.
+This will build both the executable in `src/crywrap' and certain
+support files.
+
+To install them all to their proper place, issue the `make install'
+command, as the final step of the installation stage.  For information
+about configuring and running CryWrap, please see the manual page.
+
+To clean the source tree, run `make clean' - this is useful if one
+wants to force a rebuild or make a whole-tree diff between the
+original and a modified version of CryWrap.  To also clean the files
+`configure' created, use the `make distclean' command.  If one wants
+to build CryWrap for a different machine, or with different options,
+this is the command to issue.
+
+Compilers and Options
+---------------------
+
+Some systems require unusual options for compilation or linking that
+the `configure' script does not know about.  Run `./configure --help'
+for details on some of the pertinent environment variables.
+
+You can give `configure' initial values for configuration parameters
+by setting variables in the command line or in the environment.  Here
+is an example:
+
+      ./configure CC=gcc CFLAGS="-Wno-shadow -O2" LIBS=-lposix
+
+Installation Names
+------------------
+
+By default, `make install' will install the package's files in
+`/usr/local/bin', `/usr/local/man', etc.  You can specify an
+installation prefix other than `/usr/local' by giving `configure' the
+option `--prefix=PATH'.
+
+You can specify separate installation prefixes for
+architecture-specific files and architecture-independent files.  If
+you give `configure' the option `--exec-prefix=PATH', the package will
+use PATH as the prefix for installing programs and libraries.
+Documentation and other data files will still use the regular prefix.
+
+In addition, if you use an unusual directory layout you can give
+options like `--bindir=PATH' to specify different values for
+particular kinds of files.  Run `configure --help' for a list of the
+directories you can set and what kinds of files go in them.
+
+Optional Features
+-----------------
+
+CryWrap can be configured with or without certain features - such as
+extra debugging.  Some of these are enabled by default, some are not.
+
+The list of options to control these features are listed below:
+
+* `--enable-debug'
+	Strictly for debugging purposes. This makes CryWrap log an
+	awful lot of information and behave slightly differently (so
+	it can be ran under a debugger painlessly), which is of no use
+	to anyone but developers.

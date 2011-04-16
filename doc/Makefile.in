@@ -1,0 +1,27 @@
+## doc/Makefile.in
+## arch-tag: 2edf562c-a055-44dd-b739-ff6bf30061df
+
+## -- User-modifiable variables -- ##
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+subdir		= doc
+
+## == The code below shouldn't need to be touched at all == ##
+
+## -- Private variables -- ##
+MAN8		= crywrap.8
+EXTRA_DIST	= ${MAN8}.in
+
+include ../Mk/Rules.mk
+
+## -- Generic rules -- ##
+all:: ${MAN}
+
+install:: all
+	${quiet} ${P_INST} ${DESTDIR}${man8dir}/crywrap.8
+	${quiet} ${INSTALL} -d ${DESTDIR}${man8dir}
+	${quiet} ${INSTALL_DATA} crywrap.8 ${DESTDIR}${man8dir}/
+
+uninstall::
+	${quiet} ${P_UNINST} ${DESTDIR}${man8dir}/crywrap.8
+	${quiet} rm -f ${DESTDIR}${man8dir}/crywrap.8

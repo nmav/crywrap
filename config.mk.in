@@ -1,0 +1,9 @@
+## config.mk.in -- Configuration for Mk/
+## arch-tag: 9fe53796-c387-4cd8-af4c-0817d0ccc9da
+
+PACKAGE		= crywrap
+BRANCH		= 0.2
+PATCHLEVEL	= 1
+DIST		= stable
+
+SNAPLOG		= ${top_srcdir}/ChangeLog

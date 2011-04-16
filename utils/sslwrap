@@ -1,0 +1,98 @@
+#! /bin/sh
+## sslwrap -- Wrapper around CryWrap to mimic sslwrap
+## (C) 2003 Gergely Nagy <algernon@bonehunter.rulez.org>
+##
+## This file is part of CryWrap.
+##
+## CryWrap is free software; you can redistribute it and/or modify it
+## under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+##
+## CryWrap is distributed in the hope that it will be useful, but WITHOUT
+## ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+## or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+## License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##
+## Limitations:
+## * -nbio, -nbio_test, -debug, -state, -quiet, -no_temp_rsa, -ssl2, -exec
+##   and -bugs aren't supported either, and won't ever be.
+## * -cipher is not supported by CryWrap (yet)
+## * -ssl3 is not supported by CryWrap (yet)
+##
+## Unknown options are passed on to CryWrap as-is.
+
+# Clear paramaters
+DEST_ADDR=
+DEST_PORT=
+LISTEN_PORT=
+CERT=
+KEY=
+NOCERT=
+MISC=
+VERIFY=
+
+# Parse command-line
+while [ "$#" -gt 0 ]; do
+	case $1 in
+		-addr)
+			DEST_ADDR="$2"
+			shift;;
+		-port)
+			DEST_PORT="$2"
+			shift;;
+		-accept)
+			LISTEN_PORT="$2"
+			shift;;
+		-cert)
+			CERT="$2"
+			shift;;
+		-key)
+			KEY="$2"
+			shift;;
+		-nocert)
+			NOCERT=1
+			;;
+		-cipher)
+			# FIXME: CryWrap needs this
+			shift;;
+		-verify)
+			VERIFY=1
+			shift;;
+		-Verify)
+			VERIFY=2
+			shift;;
+		-ssl3)
+			# FIXME: CryWrap needs this
+			;;
+		-nbio*|-debug|-state|-quiet|-no_tmp_rsa|-ssl2|-bugs)
+			# Ignored
+			;;
+		*)
+			# Others are passed to crywrap verbatim
+			MISC="${MISC} $1"
+			;;
+	esac
+	shift
+done
+
+# Setup CryWrap command-line
+DEST="${DEST_ADDR:-127.0.0.1}/${DEST_PORT}"
+LISTEN="/${LISTEN_PORT}"
+ANON="${NOCERT:+-a}"
+PEM=
+if [ ! -z "${CERT}" ]; then
+	PEM="cert=${CERT}"
+fi
+if [ ! -z "${KEY}" ]; then
+	PEM="${PEM}${PEM:+,}key=${KEY}"
+fi
+
+eval crywrap -d ${DEST} -l ${LISTEN} ${ANON} -p ${PEM} ${MISC} \
+     ${VERIFY:+-v ${VERIFY}}
+
+# arch-tag: b07aba5d-7b67-472b-a4d7-6d2a9b2dabbf

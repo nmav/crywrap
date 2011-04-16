@@ -1,0 +1,59 @@
+# arch-tag: 0dd027b6-52b9-44e6-a80e-512ac63d1da0
+#---------------------------------------------------------------------------
+# General configuration options
+#---------------------------------------------------------------------------
+
+PROJECT_NAME           = CryWrap
+OUTPUT_DIRECTORY       = doxygen
+
+EXTRACT_ALL            = NO
+EXTRACT_STATIC         = YES
+
+INTERNAL_DOCS          = YES
+
+JAVADOC_AUTOBRIEF      = YES
+
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+#---------------------------------------------------------------------------
+# configuration options related to warning and progress messages
+#---------------------------------------------------------------------------
+
+QUIET                  = YES
+WARN_IF_UNDOCUMENTED   = NO
+
+#---------------------------------------------------------------------------
+# configuration options related to the input files
+#---------------------------------------------------------------------------
+
+INPUT                  = src/ lib/compat/
+FILE_PATTERNS          = *.c *.h
+
+#---------------------------------------------------------------------------
+# configuration options related to source browsing
+#---------------------------------------------------------------------------
+
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+
+#---------------------------------------------------------------------------
+# configuration options related to the HTML output
+#---------------------------------------------------------------------------
+
+GENERATE_HTML          = YES
+HTML_ALIGN_MEMBERS     = YES
+
+GENERATE_TREEVIEW      = YES
+TREEVIEW_WIDTH         = 250
+
+#---------------------------------------------------------------------------
+# configuration options related to the LaTeX output
+#---------------------------------------------------------------------------
+
+GENERATE_LATEX         = NO
+
+#---------------------------------------------------------------------------
+# Configuration options related to the preprocessor   
+#---------------------------------------------------------------------------
+
+PREDEFINED             = __DOXYGEN__

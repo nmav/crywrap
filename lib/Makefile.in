@@ -1,0 +1,11 @@
+## lib/Makefile
+## arch-tag: 5db928be-d78c-4d3d-b1d5-a222ace5d7a6
+
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+subdir		= lib
+
+## -- Private variables -- ##
+SUBDIRS		= compat
+
+include ../Mk/Rules.mk

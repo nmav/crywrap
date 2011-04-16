@@ -1,0 +1,14 @@
+## history/Makefile.in
+## arch-tag: 391b0e20-53cb-4698-a622-eb01186ed08a
+
+## -- User-modifiable variables -- ##
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+subdir		= history
+
+## == The code below shouldn't need to be touched at all == ##
+
+## -- Private variables -- ##
+EXTRA_DIST	= ChangeLog-0.1 ChangeLog-0.2
+
+include ../Mk/Rules.mk

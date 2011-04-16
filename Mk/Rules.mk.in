@@ -1,0 +1,354 @@
+## Rules.mk -- Common variables and rules for all Makefiles  -*- Makefile -*-
+## arch-tag: 55f7d706-e978-47b2-ada5-7c65d7411519
+
+ifeq (${subdir},)
+top_builddir	= .
+_subdir		=
+else
+top_builddir	= $(shell echo $(foreach DIR,$(subst /, ,${subdir}),..) | tr ' ' '/')
+_subdir		= ${subdir}/
+endif
+
+define _@
+`case $@ in \
+	../*) \
+		echo $@ | sed -e "s,\.\./,,g";; \
+	*) \
+		echo ${_subdir}$@ ;; \
+esac`
+endef
+
+include ${top_builddir}/config.mk
+
+SHELL		= /bin/sh -e
+
+VERSION		= ${BRANCH}.${PATCHLEVEL}${UPATCHLEVEL}
+VPATH		= ${srcdir}
+
+## -- User modifiable variables -- ##
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+sysconfdir	= @sysconfdir@
+pkgconfdir	= ${sysconfdir}/${PACKAGE}
+sbindir		= @sbindir@
+libdir		= @libdir@
+mandir		= @mandir@
+man7dir		= ${mandir}/man7
+man8dir		= ${mandir}/man8
+infodir		= @infodir@
+
+CC		= @CC@
+CFLAGS		= @CFLAGS@
+LDFLAGS		= @LDFLAGS@
+TAR		= tar
+GZIP		= gzip
+TAR_OPTIONS	=
+GZIP_ENV	= --best
+LN_S		= @LN_S@
+
+MAKEINFO	= makeinfo
+TEXI2DVI	= texi2dvi
+
+ETAGS_CMD	= etags
+
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_DATA	= @INSTALL_DATA@
+INSTALL_DIR	= @INSTALL@ -d
+
+LEX		= @LEX@
+YACC		= @YACC@
+
+@SET_MAKE@
+
+EXTRAVERSION	=
+
+## -- Private variables -- ##
+builddir	= @builddir@
+
+DISTFILES	= ${SOURCES} ${HEADERS} ${HTML_FILES} ${INFO} Makefile.in \
+		${EXTRA_DIST} ${YACC_SOURCES} ${LEX_SOURCES}
+
+PATCHLEVEL	?= $(shell head -5 ${top_srcdir}/ChangeLog | tail -1 | \
+		    sed -e "s,^.*patch-,,g" -e "s,^.*base-,,g")
+ifeq (${UPATCHLEVEL},${PATCHLEVEL})
+PATCHLEVEL	+= 0.pre
+endif
+
+ifneq (,$(wildcard ${top_builddir}/.snapshot))
+WITH_SNAPSHOT	= yes
+endif
+
+ifdef WITH_SNAPSHOT
+SNAPLOG		?= ${top_srcdir}/history/ChangeLog-${BRANCH}-head
+UPATCHLEVEL	= .$(shell head -5 ${SNAPLOG} | tail -1 | \
+		    sed -e "s,^.*patch-,,g" -e "s,^.*base-,,g" | tr -d '\n')
+ifeq (,${subdir})
+DISTFILES	+= .snapshot
+endif
+endif
+
+TAG_FILES	= $(addprefix ${srcdir}/,${SOURCES} ${HEADERS})
+
+V		?= 0
+VERBOSE		?= ${V}
+
+# - C - #
+INCLUDES	= -I. -I${srcdir} -I${top_builddir}
+DEFINES		= -DPATCHLEVEL=\"${PATCHLEVEL}${UPATCHLEVEL}\" \
+		-DEXTRAVERSION=\"${EXTRAVERSION}\" -D_GNU_SOURCE=1 \
+		-DSYSCONFDIR=\"${sysconfdir}\" -DLIBDIR=\"${libdir}\"
+WFLAGS		= @WFLAGS@
+WFLAGS_GCC	= -Winline -Wshadow -Wpointer-arith -Wmissing-declarations \
+		-Wstrict-prototypes -Wmissing-prototypes -Wcast-qual \
+		-Wbad-function-cast  -Wchar-subscripts -Wcomment -Wformat \
+		-Wformat-nonliteral -Wformat-security -Wimplicit \
+		-Wmissing-braces -Wparentheses -Wswitch -Wunused  \
+		@WFLAGS_29X@ @WFLAGS_3X@
+WFLAGS_29X	= -Wsign-compare -Wmain -Wreturn-type
+WFLAGS_3X	= -Wsequence-point -Wdiv-by-zero -W -Wno-unused-parameter
+WFLAGS_ICC	= -Wall -wd167,171,193,279,810,869
+
+CFLAGS		= @CFLAGS@
+LIBS		= @LIBS@
+
+ALL_CFLAGS	= ${INCLUDES} ${DEFINES} ${LIBGNUTLS_CFLAGS} ${WFLAGS} \
+		${CFLAGS} ${CUSTOM_CFLAGS}
+ALL_LDFLAGS	= ${LIBS} ${LDFLAGS} ${CUSTOM_LDFLAGS}
+
+LEX_OBJECTS	= ${LEX_SOURCES:.l=.o}
+YACC_OBJECTS	= ${YACC_SOURCES:.y=.tab.o}
+_OBJECTS	= ${SOURCES:.c=.o} ${YACC_OBJECTS} ${LEX_OBJECTS}
+OBJECTS		= ${_OBJECTS} ${CUSTOM_OBJECTS}
+
+LEX_MIDSRCS	= ${LEX_SOURCES:.l=.c}
+YACC_MIDSRCS	= ${YACC_SOURCES:.y=.tab.c} ${YACC_SOURCES:.y=.tab.h}
+
+CLEANFILES	+= ${SOURCES:.c=.da} ${DVI} ${HTML} ${PROGRAMS} ${_OBJECTS} \
+		${YACC_MIDSRCS} ${LEX_MIDSRCS} gmon.out bb.out TAGS
+DISTCLEANFILES	+= ${MAN}
+MAINTCLEANFILES += ${INFO}
+
+MAKE_TARGET_VAR_APPEND = @MAKE_TARGET_VAR_APPEND@
+
+# - Documentation - #
+INFO		= ${TEXI:.texi=.info}
+DVI		= ${TEXI:.texi=.dvi}
+HTML		= ${TEXI:.texi=.html}
+
+MAN		= ${MAN1} ${MAN2} ${MAN3} ${MAN4} ${MAN5} ${MAN6} ${MAN7} \
+		${MAN8}
+
+# - Descend - #
+ifndef DESCEND_TARGET
+DESCEND_TARGET	= $@
+endif
+ifdef DEFDESCEND
+DESCEND_TARGET	= $@
+endif
+ifeq (1, ${VERBOSE})
+DESCEND		= ${quiet} $(foreach dir,${SUBDIRS},${MAKE} -C ${dir} ${DESCEND_TARGET} ; )
+else
+DESCEND		= ${quiet} $(foreach dir,${SUBDIRS},${P_SUB} ${_subdir}${dir} ; ${MAKE} -C ${dir} ${DESCEND_TARGET} ; )
+endif
+
+# - Verboseness control - #
+ifeq (1, ${VERBOSE})
+quiet		= 
+P_SUB		= true
+ECHO		= @echo >/dev/null
+DN		= 
+else
+quiet		= @
+MAKE		+= -s
+ECHO		= echo
+DN		= >/dev/null
+endif
+ifeq (2, ${VERBOSE})
+_target		?= ($@)
+export _target
+endif
+
+# Print commands
+ifdef D
+P_SUB		= ${ECHO} Building $(notdir ${DESCEND_TARGET}) in
+else
+P_SUB		= ${ECHO} >/dev/null
+endif
+P_CC		= ${ECHO} "${_target} CC"
+P_LD		= ${ECHO} "${_target} LD"
+P_INST		= ${ECHO} "${_target} INSTALL"
+P_UNINST	= ${ECHO} "${_target} UNINSTALL"
+P_CLEAN		= ${ECHO} "${_target} CLEAN"
+P_DISTCLEAN	= ${ECHO} "${_target} DISTCLEAN"
+P_SCRIPT	= ${ECHO} "${_target} SCRIPT"
+P_INFO		= ${ECHO} "${_target} INFO"
+P_DVI		= ${ECHO} "${_target} DVI"
+P_HTML		= ${ECHO} "${_target} HTML"
+P_TARBALL	= ${ECHO} "${_target} TGZ"
+P_SIG		= ${ECHO} "${_target} SIG"
+P_LINK		= ${ECHO} "${_target} LINK"
+P_LEX		= ${ECHO} "${_target} LEX"
+P_YACC		= ${ECHO} "${_target} YACC"
+
+## -- Generic rules -- ##
+all install uninstall info dvi html::
+	${DESCEND}
+TAGS:
+
+mostlyclean clean:
+	${DESCEND}
+ifneq (,${subdir})
+	${quiet} ${P_CLEAN} ${subdir}
+else
+	${quiet} ${P_SUB} .
+	${quiet} ${P_CLEAN} .
+endif
+	${quiet} test -z "${CLEANFILES}" || rm -rf ${CLEANFILES}
+distclean:
+	${DESCEND}
+ifneq (,${subdir})
+	${quiet} ${P_DISTCLEAN} ${subdir}
+else
+	${quiet} ${P_SUB} .
+	${quiet} ${P_DISTCLEAN} .
+endif
+	${quiet} rm -f Makefile
+	${quiet} test -z "${CLEANFILES}" || rm -rf ${CLEANFILES}
+	${quiet} test -z "${DISTCLEANFILES}" || rm -rf ${DISTCLEANFILES}
+maintainer-clean: clean
+	${DESCEND}
+	${quiet} rm -f Makefile
+	${quiet} test -z "${DISTCLEANFILES}" || rm -rf ${DISTCLEANFILES}
+	${quiet} test -z "${MAINTCLEANFILES}" || rm -rf ${MAINTCLEANFILES}
+
+install-strip:
+	${DESCEND}
+	${quiet} ${MAKE} INSTALL_PROGRAM='${INSTALL_PROGRAM} -s' install
+
+TAGS: ${TAG_FILES}
+	${DESCEND}
+	${quiet} ${P_SCRIPT} ${_@}
+	${quiet} test -z "${TAG_FILES}" || ${ETAGS_CMD} ${TAG_FILES}
+
+distcheck:
+distdir = ${top_builddir}/${PACKAGE}-${VERSION}/${subdir}
+distdir: distdir-prereq ${DISTFILES}
+	${DESCEND}
+	${quiet} ${INSTALL_DIR} ${distdir}
+	@set -e; list='${DISTFILES}'; for f in $$list; do \
+		if test -e ${srcdir}/$$f; then \
+			fn=${srcdir}/$$f; \
+			loc="(srcdir)"; \
+		else \
+			fn=$$f; \
+			loc="(builddir)"; \
+		fi ; \
+		if test "${VERBOSE}" = "1"; then \
+			echo cp -p $$fn ${distdir}/$$f ;\
+		else \
+			${P_INST} ${_subdir}$$f $$loc ;\
+		fi; \
+		cp -p $$fn ${distdir}/$$f ;\
+	done
+distdir-prereq::
+
+${top_builddir}/Mk/Rules.mk: DEFDESCEND=1
+${top_builddir}/Mk/Rules.mk: ${top_srcdir}/Mk/Rules.mk.in ${top_builddir}/config.status
+	${quiet} ${P_SUB} ${top_builddir}
+	${quiet} ${P_SCRIPT} $@
+	${quiet} cd ${top_builddir} && CONFIG_FILES=Mk/Rules.mk ./config.status ${DN}
+${top_builddir}/config.mk: DEFDESCEND=1
+${top_builddir}/config.mk: ${top_srcdir}/config.mk.in ${top_builddir}/config.status
+	${quiet} ${P_SUB} ${top_builddir}
+	${quiet} ${P_SCRIPT} $@
+	${quiet} cd ${top_builddir} && CONFIG_FILES=config.mk ./config.status ${DN}
+${builddir}/Makefile: DEFDESCEND=1
+${builddir}/Makefile: ${srcdir}/Makefile.in ${top_builddir}/config.status
+	${quiet} ${P_SUB} ${builddir}
+	${quiet} ${P_SCRIPT} ${_subdir}$@
+	${quiet} cd ${top_builddir} && CONFIG_FILES=./${subdir}/Makefile ./config.status ${DN}
+${top_builddir}/system.h: ${top_builddir}/config.status
+
+%/: DESCEND_TARGET=all
+%/: .FORCE
+	${quiet} ${P_SUB} $(dir $@)
+	${quiet} ${MAKE} -C $@ all
+
+ifeq (0,${MAKELEVEL})
+.DEFAULT: DESCEND_TARGET=$(notdir $@)
+.DEFAULT: .FORCE
+	${quiet} ${P_SUB} $(dir $@)
+	${quiet} ${MAKE} -C $(dir $@) $(notdir $@)
+endif
+
+ifeq (0,${MAKELEVEL})
+$(addsuffix /%,${SUBDIRS}): DESCEND_TARGET=$(notdir $@)
+$(addsuffix /%,${SUBDIRS}): .FORCE
+	${quiet} ${P_SUB} $(dir $@)
+	${quiet} ${MAKE} -C $(dir $@) $(notdir $@)
+endif
+
+.FORCE:
+
+.snapshot:
+	${quiet} touch $@
+ifdef WITH_SNAPSHOT
+ifeq (,${subdir})
+distdir-prereq:: .snapshot
+endif
+endif
+
+## -- Rules requiring explicit prereqs elsewhere -- ##
+%.c: %.l
+	${quiet} ${P_LEX} ${_@}
+	${quiet} ${LEX} $<
+	${quiet} mv lex.yy.c $@T
+	${quiet} grep -v "arch-tag" $@T >$@
+	${quiet} rm -f $@T
+%.tab.c: %.y
+	${quiet} ${P_YACC} ${_@}
+	${quiet} ${YACC} -d -o $@ $<
+	${quiet} grep -v "arch-tag" $@ >$@T
+	${quiet} rm -f $@ && mv $@T $@
+%.tab.h: %.y
+	${quiet} ${P_YACC} ${_@}
+	${quiet} ${YACC} -d -o $(patsubst %.h,%.c,$@) $<
+	${quiet} grep -v "arch-tag" $@ >$@T
+	${quiet} rm -f $@ && mv $@T $@
+%.o: %.c
+	${quiet} ${P_CC} ${_@}
+	${quiet} ${CC} -c ${CPPFLAGS} ${ALL_CFLAGS} $< -o $@
+
+${PROGRAMS}:
+	${quiet} ${P_LD} ${_@}
+	${quiet} ${CC} ${ALL_CFLAGS} -o $@ $^ ${ALL_LDFLAGS}
+
+%.dvi: %.texi
+	${quiet} ${P_DVI} ${_@}
+	${quiet} ${TEXI2DVI} $< -o $@ ${DN}
+%.html: %.texi
+	${quiet} ${P_HTML} ${_@}
+	${quiet} ${MAKEINFO} $< -o $@T --html --no-split --no-headers
+	@tidy -mq $@T >/dev/null 2>&1 || true
+	${quiet} sed -e 's,<body>,<body bgcolor="#ffffff" text="#000000">,' <$@T >$@
+	${quiet} rm -f $@T
+%.info: %.texi
+	${quiet} ${P_INFO} ${_@}
+	${quiet} ${MAKEINFO} $< -o $@
+
+${MAN}: %: ${srcdir}/%.in ${top_srcdir}/ChangeLog
+	${quiet} ${P_SCRIPT} ${_@}
+	${quiet} sed -e "s,@VERSION\@,${VERSION},g" \
+	    -e "s,@pkgconfdir\@,${pkgconfdir},g" \
+	    -e "s,@libdir\@,${libdir},g" \
+	<${srcdir}/$@.in >$@T && mv -f $@T $@
+
+## -- ${MAKE} control -- ##
+.PHONY: all install clean distclean mostlyclean uninstall maintainer-clean \
+	distdir dist distcheck html info dvi doxy
+.SUFFIXES:
+.EXPORT_ALL_VARIABLES:
+
+unexport srcdir top_srcdir subdir distdir top_builddir builddir EXTRA_DIST \
+	 GZIP GZIP_ENV SUBDIRS

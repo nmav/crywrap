@@ -1,0 +1,10 @@
+NEWS -- list of user-visible changes            -*- outline -*-
+
+* CryWrap 0.2.1 -- 2004-01-31
+
+Updated to use GnuTLS 1.0, and added support for internationalised
+domain names (using GNU Libidn).
+
+* CryWrap 0.2.0 -- 2003-10-02
+
+Initial release.

@@ -1,0 +1,11 @@
+This is CryWrap, a simplistic daemon to add TLS/SSLv3 support to
+services that do not support it.
+
+See the NEWS file for a description of recent changes to CryWrap.
+
+See the file INSTALL for instructions on how to build and install the
+program files.  See the CryWrap manual for details about
+configuration.  Type "man crywrap" in the shell prompt.
+
+Please visit the official CryWrap web page for more information.  The URL
+is http://bonehunter.rulez.org/CryWrap.phtml.

@@ -1,0 +1,41 @@
+## src/Makefile
+## arch-tag: ca811d13-9d7b-4519-95de-f998dac67549
+
+## -- User-modifiable variables -- ##
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+subdir		= src
+
+## == The code below shouldn't need to be touched at all == ##
+
+## -- Private variables -- ##
+PROGRAMS	= crywrap
+SOURCES		= crywrap.c
+HEADERS		= primes.h crywrap.h
+
+LIBGNUTLS_CFLAGS= @LIBGNUTLS_CFLAGS@
+LIBGNUTLS_LIBS	= @LIBGNUTLS_LIBS@
+SHISHI_LIBS	= @SHISHI_LIBS@
+
+CUSTOM_CFLAGS	= -I${top_srcdir}/lib ${LIBGNUTLS_CFLAGS}
+CUSTOM_LDFLAGS	= ${LIBGNUTLS_LIBS} ${SHISHI_LIBS}
+CUSTOM_OBJECTS	= ${top_builddir}/lib/compat/compat.o
+
+include ../Mk/Rules.mk
+
+## -- Standard targets -- ##
+all:: ${PROGRAMS}
+
+install:: all
+	${quiet} ${P_INST} ${DESTDIR}${sbindir}/crywrap
+	${quiet} ${INSTALL} -d ${DESTDIR}${sbindir}
+	${quiet} ${INSTALL_PROGRAM} crywrap ${DESTDIR}${sbindir}/
+
+uninstall::
+	${quiet} ${P_UNINST} ${DESTDIR}${sbindir}/crywrap
+	${quiet} rm -f ${DESTDIR}${sbindir}/crywrap
+
+## -- Dependencies -- ##
+${PROGRAMS}: ${OBJECTS}
+crywrap.o: crywrap.c ${top_builddir}/system.h ${top_srcdir}/ChangeLog \
+	   primes.h crywrap.h ${top_srcdir}/lib/compat/compat.h

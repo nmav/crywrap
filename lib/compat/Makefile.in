@@ -1,0 +1,23 @@
+## lib/compat/Makefile
+## arch-tag: c6b7536b-1c28-4ecd-b0ef-c193029d6b16
+
+## -- User-modifiable variables -- ##
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+subdir		= lib/compat
+
+## == The code below shouldn't need to be touched at all == ##
+
+## -- Private variables -- ##
+SOURCES		= compat.c
+HEADERS		= compat.h compat-regex.h
+
+EXTRA_DIST	= ChangeLog compat.m4
+
+include ../../Mk/Rules.mk
+
+## -- Standard targets -- ##
+all:: ${OBJECTS}
+
+## -- Dependencies -- ##
+compat.o: compat.c ${top_builddir}/system.h compat.h

@@ -1,0 +1,13 @@
+## m4/Makefile
+## arch-tag: ea0b0b82-8b7e-423c-ba68-4db1e5c079f2
+
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+subdir		= m4
+
+## -- Private variables -- ##
+SUBDIRS		= bh-m4
+
+EXTRA_DIST	= libgnutls.m4
+
+include ../Mk/Rules.mk
