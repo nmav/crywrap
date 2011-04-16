@@ -23,11 +23,16 @@ dnl Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 dnl **********************
 dnl * Boilerplate
 dnl **********************
-AC_PREREQ(2.53)
-AC_INIT([crywrap], [0.2-stable], [algernon@bonehunter.rulez.org])
+AC_PREREQ(2.65)
+AC_INIT([crywrap],[0.3],[bug-gnutls@gnu.org])
 AC_CONFIG_SRCDIR(src/crywrap.c)
+AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_HEADERS(system.h)
+
+AC_PROG_CC
+AC_PROG_CPP
 
 AC_CANONICAL_HOST
 AC_SUBST(host_os)
@@ -62,7 +67,16 @@ dnl **********************
 dnl * Library functions
 dnl **********************
 AC_FUNC_FORK
-AC_TYPE_SIGNAL
+AC_CACHE_CHECK([return type of signal handlers],[ac_cv_type_signal],[AC_COMPILE_IFELSE(
+[AC_LANG_PROGRAM([#include <sys/types.h>
+#include <signal.h>
+],
+		 [return *(signal (0, 0)) (0) == 1;])],
+		   [ac_cv_type_signal=int],
+		   [ac_cv_type_signal=void])])
+AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type of signal handlers
+		    (`int' or `void').])
+
 AC_FUNC_STAT
 AC_FUNC_LSTAT
 AC_FUNC_CLOSEDIR_VOID
@@ -88,11 +102,12 @@ dnl **********************
 
 PKG_CHECK_MODULES([LIBGNUTLS], [gnutls])
 
-AC_CHECK_HEADER(idna.h,
-	AC_CHECK_LIB(idn, stringprep_check_version,
-		[libidn=yes; AC_SUBST(SHISHI_LIBS, -lidn)], libidn=no))
+ AC_CHECK_HEADER([idna.h],
+	[AC_CHECK_LIB(idn, stringprep_check_version,
+		[libidn=yes; AC_SUBST(SHISHI_LIBS, -lidn)], [libidn=no])],
+	libidn=no)
 
-if test "$libidn" != "no" ; then
+if test "x$libidn" != "xno" ; then
 	AC_DEFINE(USE_LIBIDN, 1, [Define to 1 if you want Libidn.])
 else
 	AC_MSG_ERROR([You need Libidn to compile CryWrap])
@@ -103,7 +118,7 @@ dnl * Features
 dnl **********************
 dnl * Fork
 AC_ARG_ENABLE(fork,
-	AC_HELP_STRING([--disable-fork], [disable forking to background]),
+	AS_HELP_STRING([--disable-fork],[disable forking to background]),
 	[f_fork="$enableval"], [f_fork="yes"])
 if test "x$f_fork" != "xno"; then
 	AC_DEFINE_UNQUOTED(CRYWRAP_OPTION_FORK, 1,
@@ -127,7 +142,6 @@ history/Makefile
 lib/Makefile
 lib/compat/Makefile
 m4/Makefile
-m4/bh-m4/Makefile
 src/Makefile
 utils/Makefile
 ])

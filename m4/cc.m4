@@ -3,29 +3,12 @@
 AC_DEFUN([BHM4_CC_CHECK],[
 
 AC_CHECK_TOOL(CC, cc)
-AC_PROG_CC
 
 WFLAGS=""
 WFLAGS_3X=""
 WFLAGS_29X=""
 if test "x$ac_compiler_gnu" = "xyes"; then
 	WFLAGS='${WFLAGS_GCC}'
-	AC_MSG_CHECKING(whether we are using GCC >= 2.9x)
-	GCCVER=$(${CC} -dumpversion 2>/dev/null)
-	case ${GCCVER} in
-		2.9*)
-			WFLAGS_29X='${WFLAGS_29X}'
-			AC_MSG_RESULT([yes, ${GCCVER}])
-			;;
-		3.*)
-			WFLAGS_29X='${WFLAGS_29X}'
-			WFLAGS_3X='${WFLAGS_3X}'
-			AC_MSG_RESULT([yes, ${GCCVER}])
-			;;
-		*)
-			AC_MSG_RESULT([no, ${GCCVER}])
-			;;
-	esac
 	AC_MSG_CHECKING(whether GCC supports -no-cpp-precomp)
 	case $(${CC} -no-cpp-precomp 2>&1) in
 		*-no-cpp-precomp*)
@@ -51,7 +34,6 @@ AC_SUBST(WFLAGS)
 AC_SUBST(WFLAGS_29X)
 AC_SUBST(WFLAGS_3X)
 
-AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
 
 AC_CACHE_CHECK([for __VA_ARGS__], [ac_cv_va_args],

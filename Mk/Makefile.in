@@ -9,6 +9,6 @@ subdir		= Mk
 ## == The code below shouldn't need to be touched at all == ##
 
 ## -- Private variables -- ##
-EXTRA_DIST	= Rules.mk.in toplevel.mk ChangeLog Mk.m4
+EXTRA_DIST	= Rules.mk.in toplevel.mk ChangeLog
 
 include ../Mk/Rules.mk

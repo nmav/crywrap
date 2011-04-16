@@ -12,7 +12,7 @@ subdir		= lib/compat
 SOURCES		= compat.c
 HEADERS		= compat.h compat-regex.h
 
-EXTRA_DIST	= ChangeLog compat.m4
+EXTRA_DIST	= ChangeLog
 
 include ../../Mk/Rules.mk
 

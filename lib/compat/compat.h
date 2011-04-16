@@ -120,11 +120,11 @@ int bhc_getsubopt (char **optionp, char *const *tokens,
 #define SHUT_RDWR 2
 #endif
 
-#ifndef socklen_t
+#ifndef HAVE_SOCKLEN_T
 #define socklen_t int
 #endif
 
-#ifndef error_t
+#ifndef HAVE_ERROR_T
 #define error_t int
 #endif
 

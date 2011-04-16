@@ -52,7 +52,7 @@ AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
 
 AC_CHECK_SIZEOF(size_t)
-AC_CHECK_TYPE(error_t, int)
+AC_CHECK_TYPES([error_t socklen_t])
 
 AC_FUNC_MALLOC
 m4_ifdef([AC_FUNC_REALLOC], [AC_FUNC_REALLOC])
