@@ -1,12 +1,12 @@
 ## toplevel.mk -- Rules for a top-level makefile	-*- Makefile -*-
 ## arch-tag: a2fd49a3-e42f-4f04-b9e7-b1d8d67c19e6
 
-DISTCLEANFILES	+= config.cache config.log autom4te.cache system.h \
+DISTCLEANFILES	+= config.cache config.log autom4te.cache config.h \
 		Makefile config.status config.mk Mk/Rules.mk
-MAINTCLEANFILES	+= ${top_srcdir}/configure ${top_srcdir}/system.h.in \
+MAINTCLEANFILES	+= ${top_srcdir}/configure ${top_srcdir}/config.h.in \
 		${top_srcdir}/autom4te.cache ${top_srcdir}/aclocal.m4
 EXTRA_DIST	+= config.guess config.sub config.mk.in configure \
-		configure.ac install.sh system.h.in
+		configure.ac install.sh config.h.in
 
 doxy: WARNUNDOC=NO
 doxy: DOT=NO
