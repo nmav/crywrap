@@ -236,6 +236,7 @@ distdir = ${top_builddir}/${PACKAGE}-${VERSION}/${subdir}
 distdir: distdir-prereq ${DISTFILES}
 	${DESCEND}
 	${quiet} ${INSTALL_DIR} ${distdir}
+	${quiet} ${INSTALL_DIR} ${distdir}/build-aux
 	@set -e; list='${DISTFILES}'; for f in $$list; do \
 		if test -e ${srcdir}/$$f; then \
 			fn=${srcdir}/$$f; \

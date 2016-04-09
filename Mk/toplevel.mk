@@ -5,8 +5,8 @@ DISTCLEANFILES	+= config.cache config.log autom4te.cache config.h \
 		Makefile config.status config.mk Mk/Rules.mk
 MAINTCLEANFILES	+= ${top_srcdir}/configure ${top_srcdir}/config.h.in \
 		${top_srcdir}/autom4te.cache ${top_srcdir}/aclocal.m4
-EXTRA_DIST	+= config.guess config.sub config.mk.in configure \
-		configure.ac install.sh config.h.in
+EXTRA_DIST	+= build-aux/config.guess build-aux/config.sub config.mk.in configure \
+		configure.ac build-aux/install-sh config.h.in
 
 doxy: WARNUNDOC=NO
 doxy: DOT=NO
