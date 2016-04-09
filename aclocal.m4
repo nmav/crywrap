@@ -14,7 +14,5 @@
 m4_ifndef([AC_CONFIG_MACRO_DIRS], [m4_defun([_AM_CONFIG_MACRO_DIRS], [])m4_defun([AC_CONFIG_MACRO_DIRS], [_AM_CONFIG_MACRO_DIRS($@)])])
 m4_include([m4/Mk.m4])
 m4_include([m4/cc.m4])
-m4_include([m4/compat.m4])
 m4_include([m4/pkg.m4])
-m4_include([m4/sockaddr_storage.m4])
 m4_include([m4/tcp_cork.m4])

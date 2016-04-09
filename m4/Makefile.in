@@ -6,7 +6,7 @@ top_srcdir	= @top_srcdir@
 subdir		= m4
 
 ## -- Private variables -- ##
-EXTRA_DIST	= cc.m4 sfv_fd_self.m4 sockaddr_storage.m4 \
-	tcp_cork.m4 Mk.m4 compat.m4
+EXTRA_DIST	= cc.m4 sfv_fd_self.m4 \
+	tcp_cork.m4 Mk.m4
 
 include ../Mk/Rules.mk

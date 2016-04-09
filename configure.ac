@@ -63,7 +63,6 @@ AC_TYPE_UID_T
 AC_TYPE_PID_T
 
 BHM4_TCP_CORK_CHECK
-BHM4_SOCKADDR_STORAGE_CHECK
 
 dnl **********************
 dnl * Library functions
@@ -91,12 +90,6 @@ AC_CHECK_FUNCS([alarm atexit dup2 epoll_create kqueue memchr memset munmap \
 		putenv regcomp scandir select socket strcasecmp strchr \
 		strdup strerror strncasecmp strrchr strstr strtoul uname])
 AC_CHECK_FUNC([sendfile], [], [AC_CHECK_LIB(sendfile, sendfile)])
-
-dnl **********************
-dnl * BH compat suite
-dnl **********************
-
-BHCOMPAT_CHECK
 
 dnl **********************
 dnl * Rest
