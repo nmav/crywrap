@@ -22,7 +22,7 @@ include ${top_builddir}/config.mk
 
 SHELL		= /bin/sh -e
 
-VERSION		= ${BRANCH}.${PATCHLEVEL}${UPATCHLEVEL}
+VERSION		= @PACKAGE_VERSION@
 VPATH		= ${srcdir}
 
 ## -- User modifiable variables -- ##
@@ -80,7 +80,7 @@ WITH_SNAPSHOT	= yes
 endif
 
 ifdef WITH_SNAPSHOT
-SNAPLOG		?= ${top_srcdir}/history/ChangeLog-${BRANCH}-head
+SNAPLOG		?= ${top_srcdir}/history/ChangeLog-head
 UPATCHLEVEL	= .$(shell head -5 ${SNAPLOG} | tail -1 | \
 		    sed -e "s,^.*patch-,,g" -e "s,^.*base-,,g" | tr -d '\n')
 ifeq (,${subdir})

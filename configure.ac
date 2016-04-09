@@ -24,14 +24,14 @@ dnl **********************
 dnl * Boilerplate
 dnl **********************
 AC_PREREQ(2.65)
-AC_INIT([crywrap],[0.3],[bug-gnutls@gnu.org])
+AC_INIT([crywrap],[0.3.0],[bug-gnutls@gnu.org])
 AC_CONFIG_SRCDIR(src/crywrap.c)
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
 AC_CONFIG_HEADERS(config.h)
 
-AC_SUBST(CRYWRAP_PATCHLEVEL, [[`echo $PACKAGE_VERSION | sed 's/.*\..*\.\([0-9]*\)/\1/g'`]])
+AC_SUBST(CRYWRAP_PATCHLEVEL, [[`echo $PACKAGE_VERSION | sed 's/.*\..*\.\([0-9]*\).*/\1/g'`]])
 
 AC_PROG_CC
 AC_PROG_CPP
