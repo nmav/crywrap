@@ -102,7 +102,7 @@ dnl **********************
 dnl * Rest
 dnl **********************
 
-PKG_CHECK_MODULES([LIBGNUTLS], [gnutls])
+PKG_CHECK_MODULES([LIBGNUTLS], [gnutls >= 3.1.10])
 
  AC_CHECK_HEADER([idna.h],
 	[AC_CHECK_LIB(idn, stringprep_check_version,
