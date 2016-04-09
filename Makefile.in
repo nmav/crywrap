@@ -9,7 +9,7 @@ subdir		=
 EXTRA_DIST	= AUTHORS ChangeLog COPYING INSTALL NEWS \
 		README THANKS crywrap.doxy
 
-SUBDIRS		= Mk doc etc history lib m4 src utils
+SUBDIRS		= Mk doc etc history m4 src utils
 
 include Mk/Rules.mk
 include ${top_srcdir}/Mk/toplevel.mk

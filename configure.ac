@@ -29,7 +29,9 @@ AC_CONFIG_SRCDIR(src/crywrap.c)
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 
-AC_CONFIG_HEADERS(system.h)
+AC_CONFIG_HEADERS(config.h)
+
+AC_SUBST(CRYWRAP_PATCHLEVEL, [[`echo $PACKAGE_VERSION | sed 's/.*\..*\.\([0-9]*\)/\1/g'`]])
 
 AC_PROG_CC
 AC_PROG_CPP
@@ -139,8 +141,6 @@ config.mk
 doc/Makefile
 etc/Makefile
 history/Makefile
-lib/Makefile
-lib/compat/Makefile
 m4/Makefile
 src/Makefile
 utils/Makefile

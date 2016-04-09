@@ -17,9 +17,8 @@ LIBGNUTLS_CFLAGS= @LIBGNUTLS_CFLAGS@
 LIBGNUTLS_LIBS	= @LIBGNUTLS_LIBS@
 SHISHI_LIBS	= @SHISHI_LIBS@
 
-CUSTOM_CFLAGS	= -I${top_srcdir}/lib ${LIBGNUTLS_CFLAGS}
+CUSTOM_CFLAGS	= ${LIBGNUTLS_CFLAGS}
 CUSTOM_LDFLAGS	= ${LIBGNUTLS_LIBS} ${SHISHI_LIBS}
-CUSTOM_OBJECTS	= ${top_builddir}/lib/compat/compat.o
 
 include ../Mk/Rules.mk
 
@@ -37,5 +36,5 @@ uninstall::
 
 ## -- Dependencies -- ##
 ${PROGRAMS}: ${OBJECTS}
-crywrap.o: crywrap.c ${top_builddir}/system.h ${top_srcdir}/ChangeLog \
-	   primes.h crywrap.h ${top_srcdir}/lib/compat/compat.h
+crywrap.o: crywrap.c ${top_builddir}/config.h ${top_srcdir}/ChangeLog \
+	   primes.h crywrap.h
